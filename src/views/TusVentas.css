@@ -1,0 +1,58 @@
+.tus-ventas {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.main-content {
+  display: flex;
+  flex: 1;
+  justify-content: center; /* Centra horizontalmente */
+  align-items: center; /* Centra verticalmente */
+  padding: 20px;
+  background-color: #f9f9f9;
+  margin-top: 15px;
+}
+
+.sidebar-parent {
+  display: flex;
+  width: 100%;
+  max-width: 1200px; /* Tamaño máximo para centrar */
+  gap: 20px; /* Espacio entre el sidebar y el contenido */
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 4;
+  overflow-y: auto;
+}
+
+.venta-item {
+  display: flex;
+  width: 100%;
+  max-width: 800px;
+  background-color: #ffffff;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.venta-item-foto img {
+  max-width: 150px;
+  max-height: 150px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.venta-item-info {
+  margin-left: 20px;
+}
+
+.precio {
+  font-weight: bold;
+}

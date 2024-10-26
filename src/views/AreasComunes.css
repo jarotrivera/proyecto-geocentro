@@ -1,0 +1,103 @@
+/* Contenedor que envuelve el Sidebar, el contenido principal y el panel derecho */
+.layout-container {
+  display: flex;
+  width: 100%;
+  min-height: 100vh; /* Para que ocupe toda la altura de la pantalla */
+  position: relative; /* Asegura que los elementos secundarios se posicionen correctamente */
+}
+
+/* Contenedor principal para centrar las imágenes horizontalmente */
+.amenities {
+  display: flex;
+  flex-direction: column; /* Alinear las imágenes en columna */
+  align-items: center; /* Centrar horizontalmente las imágenes */
+  justify-content: center; /* Centrar verticalmente las imágenes */
+  width: 100%; /* Ocupar todo el ancho disponible */
+}
+
+/* Ajuste del tamaño de las imágenes para agrandarlas solo horizontalmente */
+.sala-de-nios,
+.gym-icon,
+.sala-de-lavanderia,
+.area-icon {
+  width: 100%; /* Ocupar todo el ancho del contenedor */
+  max-width: 900px; /* Ancho máximo, ajusta según lo necesites */
+  height: auto; /* Mantener la proporción original para evitar que se estiren verticalmente */
+  margin: 20px 0; /* Espacio vertical entre las imágenes */
+  margin-left: 200px;
+  display: block; /* Comportarse como un elemento de bloque */
+  object-fit: cover; /* Ajustar la imagen para que cubra el ancho completo del contenedor */
+}
+
+/* Opcional: Contenedor de las imágenes */
+.amenity {
+  width: 100%; /* Contenedor que ocupa todo el ancho disponible */
+  display: flex;
+  justify-content: center; /* Centrar las imágenes dentro del contenedor */
+}
+
+/* Contenedor del contenido principal */
+.main-content {
+  flex: 1; /* Toma el espacio restante */
+  padding: 20px; /* Espaciado interno para el contenido */
+  box-sizing: border-box; /* Incluye el padding en el ancho total */
+}
+
+/* Panel derecho fijo */
+.right-panel {
+  width: 300px; /* Fija el ancho del RightPanel */
+  min-width: 300px; /* Evita que se reduzca */
+}
+
+/* Contenedor del botón de Cerrar Sesión debajo del panel derecho */
+.logout-button-container {
+  display: flex;
+  justify-content: flex-end;
+  padding: 30px;
+  margin-right: 20px; /* Espaciado desde el borde derecho */
+  position: absolute;
+  bottom: 350px; /* Ajusta el valor para subir o bajar el botón */
+  right: 0; /* Alinea el botón al borde derecho */
+  z-index: 1000; /* Asegura que esté por encima de otros elementos */
+}
+
+/* Estilo del botón de Cerrar Sesión */
+.botoncerrarsesion {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 60px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.botoncerrarsesion:hover {
+  background-color: #0056b3;
+}
+
+/* Ajuste del estilo para los títulos de las imágenes */
+.title5 {
+  font-size: 20px; /* Tamaño de la fuente */
+  padding-top: 10px;
+  padding-bottom: 10px;
+  font-weight: 700; /* Aumenta el peso de la fuente para hacerla más gruesa */
+  color: #000000; /* Color negro para que resalte más */
+  margin-left: 208px;
+}
+
+/* Ajuste responsivo */
+@media screen and (max-width: 825px) {
+  .layout-container {
+    flex-direction: column;
+  }
+  .main-content,
+  .right-panel {
+    width: 100%;
+    max-width: none;
+  }
+  .logout-button-container {
+    justify-content: center;
+    margin-right: 0;
+  }
+}

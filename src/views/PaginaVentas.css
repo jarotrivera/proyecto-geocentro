@@ -1,0 +1,166 @@
+/* Estilos generales para la página de ventas */
+.pagina-ventas {
+  width: 100%;
+  position: relative;
+  background-color: var(--bg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Contenedor principal para el contenido de la página */
+.content5 {
+  display: flex;
+  flex-direction: row;
+  padding: 0 var(--padding-xl);
+  box-sizing: border-box;
+  gap: var(--gap-31xl);
+  max-width: 100%;
+}
+
+/* Contenedor principal para la sección central */
+.main-content1 {
+  display: flex;
+  flex-direction: row;
+  gap: var(--gap-26xl);
+  flex: 1;
+  max-width: 100%;
+}
+
+/* Estilos para el feed donde se muestran las publicaciones */
+.feed {
+  flex: 3;
+  display: flex;
+  flex-direction: column;
+  padding: var(--padding-21xl) 0 0;
+  box-sizing: border-box;
+  min-width: 471px;
+}
+
+/* Estilos para el bloque completo de la venta */
+.post-full1 {
+  align-self: stretch;
+  box-shadow: var(--shadow);
+  border-radius: var(--br-8xs);
+  background-color: var(--white);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: var(--padding-31xl) var(--padding-10xl) var(--padding-89xl);
+  box-sizing: border-box;
+  gap: var(--gap-xl);
+}
+
+/* Bloque que agrupa la foto, comentario, y la información del usuario */
+.venta-bloque {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xl);
+}
+
+/* Estilos para la información del usuario */
+.user-info1 {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-xl);
+}
+
+/* Estilos para el contenedor del avatar */
+.user-avatar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.feed {
+  flex: 3;
+  display: flex;
+  flex-direction: column;
+  padding: var(--padding-21xl) 0 0;
+  box-sizing: border-box;
+  min-width: 471px;
+  align-items: center; /* Alinea el contenido horizontalmente al centro */
+  justify-content: center; /* Alinea el contenido verticalmente al centro */
+  text-align: center; /* Centra el texto */
+}
+
+
+/* Estilos para la imagen del avatar */
+.ava-icon1 {
+  height: 60px;
+  width: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* Estilos para el nombre de usuario */
+.nikcname1 {
+  font-size: 26px;
+  letter-spacing: 0.05em;
+}
+
+/* Estilos para el título de la venta */
+.ventas-de-queques2 {
+  font-size: 23px;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* Estilos para la descripción de la venta */
+.ventas-de-queques3 {
+  font-size: 20px;
+  line-height: 45px;
+  margin: -10px;
+}
+
+/* Estilos para la imagen del queque */
+.post-images1 {
+  height: 350px;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Ajustes para la imagen del queque */
+.queque-facil-15190-orig-1-icon1 {
+  width: 1600px;
+  height: 1000px;
+  object-fit: cover;
+}
+
+/* Estilos para el contenido de la venta */
+.post-content1 {
+  font-size: 21px;
+  line-height: 25px;
+}
+
+/* Estilos para el texto de la venta */
+.posuere-arcu-arcu1 {
+  display: inline-block;
+  max-width: 100%;
+}
+
+/* Estilos responsivos */
+@media screen and (max-width: 1100px) {
+  .main-content1 {
+    flex-wrap: wrap;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .post-full1 {
+    padding-top: var(--padding-13xl);
+    padding-bottom: var(--padding-51xl);
+  }
+  .feed {
+    min-width: 100%;
+  }
+  .main-content1 {
+    gap: var(--gap-3xl);
+    min-width: 100%;
+  }
+  .content5 {
+    gap: var(--gap-6xl);
+  }
+}

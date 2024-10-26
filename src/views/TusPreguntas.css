@@ -1,0 +1,72 @@
+.tus-preguntas1 {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.main-content {
+  display: flex;
+  flex: 1;
+}
+
+
+.post-full {
+  /* Asegúrate de que el ancho del contenido de los posts también esté ajustado */
+  width: 100%; /* Asegura que el contenido ocupe todo el ancho del contenedor */
+}
+
+.posts {
+  flex: 3;
+  padding: 20px;
+  width: 80%; /* Ajusta el ancho del contenedor de los posts */
+  margin-left: auto; /* Alinea el contenedor hacia la derecha */
+  margin-right: 20px; /* Espacio a la derecha del contenedor de los posts */
+  /* Puedes ajustar estos valores según tus necesidades */
+}
+
+.post-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.post {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+}
+
+.user-avatar-container {
+  display: flex;
+  align-items: center;
+}
+
+.ava-icon {
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+}
+
+.page-title-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.nickname {
+  font-weight: bold;
+}
+
+.post-title {
+  font-size: 1.2em;
+  margin: 0;
+}
+
+.post-content {
+  margin-top: 10px;
+}
