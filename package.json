@@ -8,7 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "start": "node backend/server.js"  // Aquí especificas la ruta de tu servidor de backend
+    "start": "node backend/server.js"
   },
   "dependencies": {
     "@emotion/react": "^11.13.3",
@@ -16,9 +16,9 @@
     "@mui/icons-material": "^6.1.5",
     "@mui/material": "^6.1.5",
     "bootstrap": "^5.3.3",
-    "express": "^4.18.2",  // Añade Express si aún no lo tienes
-    "mysql2": "^3.1.2",    // Añade MySQL si lo necesitas
-    "sequelize": "^6.30.0", // Añade Sequelize si lo necesitas
+    "express": "^4.18.2",
+    "mysql2": "^3.1.2",
+    "sequelize": "^6.30.0",
     "react": "^18.3.1",
     "react-bootstrap": "^2.10.4",
     "react-dom": "^18.3.1",
