@@ -1,83 +1,65 @@
-/* PaginaInicial.css */
-.pagina-inicial {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-}
-
-.content4 {
-  display: flex;
-  flex: 1;
-}
-
-.main-content {
-  flex: 3;
-  padding: 20px;
-}
-
+/* Contenedor principal de las publicaciones */
 .posts-container {
   display: flex;
-  flex-direction: column;
-  margin-top: 20px;
+  justify-content: flex-start; /* Alinea los elementos hacia la izquierda */
+  padding-left: 150px; /* Controla la posición izquierda */
+  max-width: 90%; /* Ajusta el ancho del contenedor para que no ocupe todo el espacio */
 }
 
-.posts {
-  display: flex;
-  flex-direction: column;
-}
-
-.post {
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  padding: 15px;
-  margin-bottom: 20px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+/* Estilos de la tarjeta de la publicación */
+.post-card {
   background-color: #fff;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 10px;
+  margin: 12px 0; /* Margen superior e inferior, sin margen izquierdo */
+  max-width: 1150px; /* Limita el ancho máximo de la tarjeta */
+  transition: 0.3s;
+  position: relative;
+  left: -20px; /* Mueve la tarjeta ligeramente hacia la izquierda */
 }
 
+.post-card:hover {
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Encabezado de la publicación */
 .post-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
+/* Contenedor de avatar y nombre del usuario */
 .user-avatar-container {
   display: flex;
   align-items: center;
 }
 
-.ava-icon {
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  margin-right: 10px;
-}
-
 .user-info {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  margin-left: 10px;
 }
 
-.nickname {
-  font-weight: bold;
-  font-size: 1.1rem;
-}
-
+/* Título de la publicación */
 .post-title {
-  font-size: 1.3rem;
-  margin: 5px 0 10px;
+  font-size: 1.2em;
+  margin: 0;
 }
 
+/* Fecha de la publicación */
+.post-date {
+  color: rgb(97, 96, 96);
+  font-size: 0.9em;
+}
+
+/* Contenido de la publicación */
 .post-content {
   margin-top: 10px;
 }
 
+/* Imagen de la publicación */
 .post-image img {
-  max-width: 100%;
-  height: auto;
+  width: 100%;
   border-radius: 8px;
+  margin-top: 10px;
 }

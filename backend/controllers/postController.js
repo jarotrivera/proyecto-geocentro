@@ -9,12 +9,24 @@ const getPosts = async (req, res) => {
     const posts = await Post.findAll({
       include: {
         model: User,
-        as: 'User',
-        attributes: ['nombre'],
+        as: 'usuario', // Cambiado a 'usuario' para coincidir con el alias en server.js
+        attributes: ['nombre'], // Incluye solo el nombre del usuario
       },
     });
-    console.log("Publicaciones obtenidas:", posts);
-    res.status(200).json(posts);
+
+    // Formatea las publicaciones para incluir el nombre del usuario
+    const postsWithUsernames = posts.map(post => ({
+      id: post.id,
+      titulo: post.titulo,
+      foto: post.foto,
+      descripcion: post.descripcion,
+      createdAt: post.createdAt,
+      updatedAt: post.updatedAt,
+      usuarioNombre: post.usuario ? post.usuario.nombre : 'Usuario desconocido', // Muestra el nombre del usuario
+    }));
+
+    console.log("Publicaciones obtenidas:", postsWithUsernames);
+    res.status(200).json(postsWithUsernames);
   } catch (error) {
     console.error("Error al obtener las publicaciones:", error);
     res.status(500).json({ message: "Error al obtener las publicaciones", error });
@@ -24,7 +36,7 @@ const getPosts = async (req, res) => {
 // Crear una publicación
 const createPost = async (req, res) => {
   const { titulo, foto, descripcion } = req.body;
-  const usuarioId = req.userId; // Asumiendo que `userId` viene del middleware de autenticación
+  const usuarioId = req.userId; // Asumiendo que userId viene del middleware de autenticación
 
   try {
     const newPost = await Post.create({

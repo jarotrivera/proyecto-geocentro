@@ -3,7 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Sidebar from "../components/Menu";
 import RightPanel2 from "../components/RightPanel2";
 import "./PaginaInicial.css";
-import { IconButton, Menu, MenuItem, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button } from '@mui/material';
+import { Card, CardContent, Typography, IconButton, Menu, MenuItem, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, Avatar, Box } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 const PaginaInicial = () => {
@@ -22,20 +22,21 @@ const PaginaInicial = () => {
       try {
         const response = await fetch('http://localhost:3000/api/posts', {
           headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          }
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          },
         });
-        if (!response.ok) throw new Error('Error al obtener las publicaciones');
-
+        if (!response.ok) {
+          throw new Error('Error al obtener las publicaciones');
+        }
         const data = await response.json();
         setPublicaciones(data.reverse());
       } catch (error) {
-        console.error(error.message);
         setError(error.message);
       } finally {
         setLoading(false);
       }
     };
+
     fetchPublicaciones();
   }, []);
 
@@ -61,86 +62,118 @@ const PaginaInicial = () => {
   };
 
   const handleEditSave = async () => {
+    if (!editPostId) {
+      console.error("No se ha seleccionado ninguna publicación para editar");
+      return;
+    }
+
     try {
       const response = await fetch(`http://localhost:3000/api/posts/${editPostId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },
         body: JSON.stringify({
           titulo: editTitle,
-          descripcion: editDescription
-        })
+          descripcion: editDescription,
+        }),
       });
-      if (!response.ok) throw new Error('Error al editar la publicación');
 
-      setPublicaciones((prev) =>
-        prev.map((post) =>
-          post.id === editPostId
-            ? { ...post, titulo: editTitle, descripcion: editDescription }
-            : post
-        )
-      );
-      closeEditModal();
+      if (response.ok) {
+        setPublicaciones((prev) =>
+          prev.map((post) =>
+            post.id === editPostId
+              ? { ...post, titulo: editTitle, descripcion: editDescription }
+              : post
+          )
+        );
+        closeEditModal();
+      } else if (response.status === 401) {
+        console.error('Error de autorización: no autorizado');
+      } else {
+        console.error('Error al editar la publicación:', response.statusText);
+      }
     } catch (error) {
-      console.error(error);
+      console.error('Error al guardar los cambios de la publicación:', error);
     }
   };
 
   const handleDelete = async () => {
-    try {
-      const response = await fetch(`http://localhost:3000/api/posts/${editPostId}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
-      if (!response.ok) throw new Error('Error al eliminar la publicación');
+    if (editPostId) {
+      try {
+        const response = await fetch(`http://localhost:3000/api/posts/${editPostId}`, {
+          method: 'DELETE',
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
 
-      setPublicaciones((prev) => prev.filter((post) => post.id !== editPostId));
-    } catch (error) {
-      console.error(error);
-    } finally {
-      handleMenuClose();
+        if (response.ok) {
+          setPublicaciones(publicaciones.filter((post) => post.id !== editPostId));
+        } else if (response.status === 401) {
+          console.error('Error de autorización: no autorizado');
+        } else {
+          console.error('Error al eliminar la publicación:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Error al eliminar la publicación:', error);
+      } finally {
+        handleMenuClose();
+      }
+    } else {
+      console.error('No se ha seleccionado ninguna publicación para eliminar');
     }
   };
 
-  if (loading) return <p>Cargando publicaciones...</p>;
+  if (loading) {
+    return <p>Cargando publicaciones...</p>;
+  }
 
   return (
     <div className="pagina-inicial">
       <div className="content4">
         <Sidebar />
-        <section className="main-content">
-          <div className="posts-container">
+        <section className="main-content" style={{ display: 'flex', justifyContent: 'space-between', padding: '20px' }}>
+          <div className="posts-container" style={{ flex: 1, marginRight: '20px' }}>
             <div className="posts">
               {error ? (
                 <p>{error}</p>
               ) : publicaciones.length > 0 ? (
                 publicaciones.map((publicacion) => (
-                  <div key={publicacion.id} className="post">
-                    <div className="post-header">
-                      <div className="user-avatar-container">
-                        <img
-                          className="ava-icon"
-                          loading="lazy"
-                          alt="Avatar"
-                          src={publicacion.avatarUrl || "/perfiluser.png"}
-                        />
-                        <div className="user-info">
-                          <div className="nickname">{publicacion.nickName || 'Usuario'}</div>
-                          <h3 className="post-title">{publicacion.titulo}</h3>
+                  <Card key={publicacion.id} className="post-card" variant="outlined" style={{ margin: '20px 0', width: '100%' }}>
+                    <CardContent>
+                      <Box display="flex" alignItems="center" mb={2}>
+                        <Avatar src={publicacion.avatarUrl || "/perfiluser.png"} alt="Avatar" />
+                        <Box ml={2}>
+                          <Typography variant="subtitle1" color="textSecondary">
+                            {publicacion.usuarioNombre || 'Usuario'}
+                          </Typography>
+                          <Typography variant="body2" color="textSecondary">
+                            {new Date(publicacion.createdAt).toLocaleDateString()}
+                          </Typography>
+                        </Box>
+                        <IconButton
+                          aria-label="more"
+                          aria-controls="long-menu"
+                          aria-haspopup="true"
+                          onClick={(e) => handleMenuOpen(e, publicacion)}
+                          style={{ marginLeft: 'auto' }}
+                        >
+                          <MoreVertIcon />
+                        </IconButton>
+                      </Box>
+                      <Typography variant="h6" component="h2" style={{ fontWeight: 'bold', marginBottom: '10px' }}>
+                        {publicacion.titulo}
+                      </Typography>
+                      <Typography variant="body1" component="p" style={{ marginTop: '10px' }}>
+                        {publicacion.descripcion}
+                      </Typography>
+                      {publicacion.foto && (
+                        <div className="post-image" style={{ marginTop: '10px' }}>
+                          <img src={publicacion.foto} alt="Imagen de la publicación" style={{ width: '100%' }} />
                         </div>
-                      </div>
-                      <IconButton
-                        aria-label="more"
-                        aria-controls="long-menu"
-                        aria-haspopup="true"
-                        onClick={(e) => handleMenuOpen(e, publicacion)}
-                      >
-                        <MoreVertIcon />
-                      </IconButton>
+                      )}
                       <Menu
                         anchorEl={anchorEl}
                         keepMounted
@@ -150,26 +183,19 @@ const PaginaInicial = () => {
                         <MenuItem onClick={openEditModal}>Editar Publicación</MenuItem>
                         <MenuItem onClick={handleDelete}>Eliminar Publicación</MenuItem>
                       </Menu>
-                    </div>
-                    <div className="post-content">
-                      <p>{publicacion.descripcion}</p>
-                      {publicacion.foto && (
-                        <div className="post-image">
-                          <img src={publicacion.foto} alt="Imagen de la publicación" />
-                        </div>
-                      )}
-                    </div>
-                  </div>
+                    </CardContent>
+                  </Card>
                 ))
               ) : (
                 <p>No hay publicaciones disponibles.</p>
               )}
             </div>
           </div>
+          <RightPanel2 style={{ width: '250px' }} />
         </section>
-        <RightPanel2 />
       </div>
 
+      {/* Modal de Edición */}
       <Dialog open={editModalOpen} onClose={closeEditModal}>
         <DialogTitle>Editar Publicación</DialogTitle>
         <DialogContent>

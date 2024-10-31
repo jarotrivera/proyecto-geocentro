@@ -14,11 +14,16 @@ const Post = sequelize.define('Post', {
   descripcion: {
     type: DataTypes.TEXT,
   },
+  usuarioId: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: User,
+      key: 'id',
+    },
+  },
 });
 
-// Definimos la relación: Una publicación pertenece a un usuario
-Post.associate = (models) => {
-  Post.belongsTo(models.User, { foreignKey: 'usuarioId', as: 'User' });
-};
+// Evita conflicto cambiando el alias a 'PostUser' en el modelo `Post`
+Post.belongsTo(User, { foreignKey: 'usuarioId', as: 'PostUser' });
 
 module.exports = Post;

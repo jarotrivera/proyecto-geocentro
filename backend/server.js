@@ -12,7 +12,7 @@ const Post = require('./models/postModel');
 
 // Configurar las asociaciones entre los modelos
 User.hasMany(Post, { foreignKey: 'usuarioId', as: 'posts' });
-Post.belongsTo(User, { foreignKey: 'usuarioId', as: 'User' });
+Post.belongsTo(User, { foreignKey: 'usuarioId', as: 'usuario' }); // Cambiado a 'usuario'
 
 const app = express();
 
