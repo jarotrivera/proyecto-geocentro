@@ -1,9 +1,15 @@
 /* Contenedor principal de las publicaciones */
 .posts-container {
   display: flex;
-  justify-content: flex-start; /* Alinea los elementos hacia la izquierda */
-  padding-left: 150px; /* Controla la posición izquierda */
-  max-width: 90%; /* Ajusta el ancho del contenedor para que no ocupe todo el espacio */
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 0; /* Elimina el padding para que quede más a la izquierda */
+  max-width: 100%; /* Usa el ancho completo de la pantalla */
+  margin: 0 auto; /* Centra el contenedor en el espacio disponible */
+  overflow-y: auto;
+  max-height: calc(100vh - 100px);
+  padding-left: 0;
+  margin-left: -150px;
 }
 
 /* Estilos de la tarjeta de la publicación */
@@ -12,16 +18,18 @@
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 10px;
-  margin: 12px 0; /* Margen superior e inferior, sin margen izquierdo */
-  max-width: 1150px; /* Limita el ancho máximo de la tarjeta */
+  margin: 12px 0;
+  max-width: 1150px;
   transition: 0.3s;
   position: relative;
-  left: -20px; /* Mueve la tarjeta ligeramente hacia la izquierda */
+  margin-left: -20px; /* Ajusta este valor hasta que logres la posición deseada */
 }
+
 
 .post-card:hover {
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
+
 
 /* Encabezado de la publicación */
 .post-header {
@@ -59,7 +67,9 @@
 
 /* Imagen de la publicación */
 .post-image img {
-  width: 100%;
+  max-width: 100%;
+  max-height: 300px;
+  object-fit: cover;
   border-radius: 8px;
   margin-top: 10px;
 }

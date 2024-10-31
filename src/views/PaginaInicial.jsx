@@ -3,8 +3,9 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import Sidebar from "../components/Menu";
 import RightPanel2 from "../components/RightPanel2";
 import "./PaginaInicial.css";
-import { Card, CardContent, Typography, IconButton, Menu, MenuItem, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, Avatar, Box } from '@mui/material';
+import { Card, CardContent, Typography, IconButton, Menu, MenuItem, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Button, Avatar, Box, Modal } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import CloseIcon from '@mui/icons-material/Close';
 
 const PaginaInicial = () => {
   const [publicaciones, setPublicaciones] = useState([]);
@@ -12,6 +13,8 @@ const PaginaInicial = () => {
   const [error, setError] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
   const [editModalOpen, setEditModalOpen] = useState(false);
+  const [imageModalOpen, setImageModalOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState('');
   const [editTitle, setEditTitle] = useState('');
   const [editDescription, setEditDescription] = useState('');
   const [editPostId, setEditPostId] = useState(null);
@@ -59,6 +62,16 @@ const PaginaInicial = () => {
   const closeEditModal = () => {
     setEditModalOpen(false);
     setEditPostId(null);
+  };
+
+  const openImageModal = (image) => {
+    setSelectedImage(image);
+    setImageModalOpen(true);
+  };
+
+  const closeImageModal = () => {
+    setImageModalOpen(false);
+    setSelectedImage('');
   };
 
   const handleEditSave = async () => {
@@ -171,7 +184,10 @@ const PaginaInicial = () => {
                       </Typography>
                       {publicacion.foto && (
                         <div className="post-image" style={{ marginTop: '10px' }}>
-                          <img src={publicacion.foto} alt="Imagen de la publicación" style={{ width: '100%' }} />
+                          <img src={publicacion.foto} alt="Imagen de la publicación" style={{ width: '100%', maxHeight: '200px', objectFit: 'cover' }} />
+                          <Button onClick={() => openImageModal(publicacion.foto)} color="primary" style={{ marginTop: '10px' }}>
+                            Ver Imagen Completa
+                          </Button>
                         </div>
                       )}
                       <Menu
@@ -194,6 +210,16 @@ const PaginaInicial = () => {
           <RightPanel2 style={{ width: '250px' }} />
         </section>
       </div>
+
+      {/* Modal de Imagen Completa */}
+      <Modal open={imageModalOpen} onClose={closeImageModal}>
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', position: 'relative' }}>
+          <IconButton onClick={closeImageModal} sx={{ position: 'absolute', top: '10px', right: '10px' }}>
+            <CloseIcon />
+          </IconButton>
+          <img src={selectedImage} alt="Imagen Completa" style={{ maxWidth: '90%', maxHeight: '90%' }} />
+        </Box>
+      </Modal>
 
       {/* Modal de Edición */}
       <Dialog open={editModalOpen} onClose={closeEditModal}>

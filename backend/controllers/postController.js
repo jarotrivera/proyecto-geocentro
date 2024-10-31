@@ -1,12 +1,19 @@
-// controllers/postController.js
 const Post = require('../models/postModel');
 const User = require('../models/userModel');
+const sharp = require('sharp');
 
-// Obtener todas las publicaciones
+// Obtener todas las publicaciones con paginación
 const getPosts = async (req, res) => {
   try {
     console.log("Intentando obtener publicaciones...");
-    const posts = await Post.findAll({
+    
+    const page = parseInt(req.query.page) || 1; // Página actual desde el query
+    const limit = 10; // Limita a 10 publicaciones por página
+    const offset = (page - 1) * limit;
+
+    const { count, rows: posts } = await Post.findAndCountAll({
+      limit,
+      offset,
       include: {
         model: User,
         as: 'usuario', // Cambiado a 'usuario' para coincidir con el alias en server.js
@@ -14,7 +21,7 @@ const getPosts = async (req, res) => {
       },
     });
 
-    // Formatea las publicaciones para incluir el nombre del usuario
+    const totalPages = Math.ceil(count / limit);
     const postsWithUsernames = posts.map(post => ({
       id: post.id,
       titulo: post.titulo,
@@ -22,11 +29,15 @@ const getPosts = async (req, res) => {
       descripcion: post.descripcion,
       createdAt: post.createdAt,
       updatedAt: post.updatedAt,
-      usuarioNombre: post.usuario ? post.usuario.nombre : 'Usuario desconocido', // Muestra el nombre del usuario
+      usuarioNombre: post.usuario ? post.usuario.nombre : 'Usuario desconocido',
     }));
 
     console.log("Publicaciones obtenidas:", postsWithUsernames);
-    res.status(200).json(postsWithUsernames);
+    res.status(200).json({
+      data: postsWithUsernames,
+      currentPage: page,
+      totalPages,
+    });
   } catch (error) {
     console.error("Error al obtener las publicaciones:", error);
     res.status(500).json({ message: "Error al obtener las publicaciones", error });
@@ -36,12 +47,25 @@ const getPosts = async (req, res) => {
 // Crear una publicación
 const createPost = async (req, res) => {
   const { titulo, foto, descripcion } = req.body;
-  const usuarioId = req.userId; // Asumiendo que userId viene del middleware de autenticación
+  const usuarioId = req.userId;
 
   try {
+    let resizedImageBase64 = foto;
+
+    // Redimensiona la imagen solo si 'foto' tiene contenido
+    if (foto) {
+      const buffer = Buffer.from(foto.split(",")[1], 'base64'); // Si foto está en formato base64
+      const resizedImage = await sharp(buffer)
+        .resize({ width: 800 }) // Ajusta el tamaño deseado
+        .jpeg({ quality: 80 })  // Ajusta la calidad de la imagen
+        .toBuffer();
+      resizedImageBase64 = `data:image/jpeg;base64,${resizedImage.toString('base64')}`;
+    }
+
+    // Crear la publicación en la base de datos
     const newPost = await Post.create({
       titulo,
-      foto,
+      foto: resizedImageBase64, // Guardar la imagen redimensionada en la base de datos
       descripcion,
       usuarioId,
     });

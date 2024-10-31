@@ -9,7 +9,7 @@ const Post = sequelize.define('Post', {
     allowNull: false,
   },
   foto: {
-    type: DataTypes.STRING,
+    type: DataTypes.TEXT('long'), 
   },
   descripcion: {
     type: DataTypes.TEXT,

@@ -12,13 +12,13 @@ const Post = require('./models/postModel');
 
 // Configurar las asociaciones entre los modelos
 User.hasMany(Post, { foreignKey: 'usuarioId', as: 'posts' });
-Post.belongsTo(User, { foreignKey: 'usuarioId', as: 'usuario' }); // Cambiado a 'usuario'
+Post.belongsTo(User, { foreignKey: 'usuarioId', as: 'usuario' });
 
 const app = express();
 
 // Middlewares
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '10mb' })); // Aumenta el límite aquí
 
 // Rutas
 app.use('/api/auth', authRoutes);
