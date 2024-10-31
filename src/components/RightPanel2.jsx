@@ -2,14 +2,19 @@ import PropTypes from "prop-types";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Button } from "react-bootstrap";
 import "./RightPanel2.css";
+import { useNavigate } from "react-router-dom"; // Importar el hook useNavigate
 
 const RightPanel2 = ({ className = "" }) => {
+  const navigate = useNavigate(); // Usar el hook useNavigate para navegación
+
   const goToGastosComunes = () => {
-    // Navegación a gastos comunes
+    // Navegar a la ruta de gastos comunes
+    navigate("/gastoscomunes");
   };
 
   const goToAreasComunes = () => {
-    // Navegación a áreas comunes
+    // Navegar a la ruta de áreas comunes
+    navigate("/areas-comunes");
   };
 
   return (

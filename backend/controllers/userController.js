@@ -1,46 +1,85 @@
-const User = require('../models/userModel');
-const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+const User = require('../models/userModel');
+const Post = require('../models/postModel');
 
-// Registro de usuarios
-const register = async (req, res) => {
+// Función para registrar un nuevo usuario
+const registerUser = async (req, res) => {
+  const { nombre, email, password, departamento } = req.body;
+
   try {
-    const { nombre, email, password, departamento } = req.body;
-    
     // Verificar si el usuario ya existe
-    const userExists = await User.findOne({ where: { email } });
-    if (userExists) return res.status(400).json({ message: 'El correo ya está registrado' });
+    const existingUser = await User.findOne({ where: { email } });
+    if (existingUser) {
+      return res.status(400).json({ message: 'El usuario ya existe' });
+    }
 
-    // Encriptar la contraseña
-    const hashedPassword = await bcrypt.hash(password, 10);
+    // Encriptar la contraseña antes de guardarla
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
 
     // Crear un nuevo usuario
-    const newUser = await User.create({ nombre, email, password: hashedPassword, departamento });
-    res.status(201).json({ message: 'Usuario registrado correctamente', user: newUser });
+    const newUser = await User.create({
+      nombre,
+      email,
+      password: hashedPassword,
+      departamento,
+    });
+
+    res.status(201).json({ message: 'Usuario registrado exitosamente', user: newUser });
   } catch (error) {
-    res.status(500).json({ message: 'Error en el registro', error: error.message });
+    console.error('Error al registrar el usuario:', error);
+    res.status(500).json({ message: 'Error interno del servidor' });
   }
 };
 
-// Login de usuarios
-const login = async (req, res) => {
-  try {
-    const { email, password } = req.body;
+// Función para manejar el inicio de sesión
+const loginUser = async (req, res) => {
+  const { nombre, password } = req.body;
 
-    // Verificar si el usuario existe
-    const user = await User.findOne({ where: { email } });
-    if (!user) return res.status(404).json({ message: 'Usuario no encontrado' });
+  try {
+    // Buscar al usuario por nombre
+    const user = await User.findOne({ where: { nombre } });
+
+    if (!user) {
+      return res.status(401).json({ message: 'Credenciales incorrectas' });
+    }
 
     // Verificar la contraseña
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) return res.status(401).json({ message: 'Contraseña incorrecta' });
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ message: 'Credenciales incorrectas' });
+    }
 
-    // Crear un token de JWT
-    const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    res.status(200).json({ message: 'Inicio de sesión exitoso', token });
+    // Generar un token JWT
+    const token = jwt.sign({ id: user.id, nombre: user.nombre }, process.env.JWT_SECRET, {
+      expiresIn: '1h',
+    });
+
+    res.json({ token });
   } catch (error) {
-    res.status(500).json({ message: 'Error en el login', error: error.message });
+    console.error('Error al iniciar sesión:', error);
+    res.status(500).json({ message: 'Error interno del servidor' });
   }
 };
 
-module.exports = { register, login };
+// Función para obtener todas las publicaciones
+const getPosts = async (req, res) => {
+  try {
+    console.log("Intentando obtener publicaciones...");
+    const posts = await Post.findAll({
+      include: {
+        model: User,
+        as: 'usuario',
+        attributes: ['nombre'],
+      },
+    });
+    console.log("Publicaciones obtenidas:", posts);
+    res.status(200).json({ success: true, data: posts });
+  } catch (error) {
+    console.error("Error al obtener las publicaciones:", error);
+    res.status(500).json({ message: "Error al obtener las publicaciones", error });
+  }
+};
+
+module.exports = { registerUser, loginUser, getPosts };

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Button, Form } from "react-bootstrap";
+import { useNavigate } from "react-router-dom"; // Importar useNavigate
 import "./Login.css";
 
 const Login = () => {
@@ -10,6 +11,7 @@ const Login = () => {
   });
 
   const [error, setError] = useState("");
+  const navigate = useNavigate(); // Inicializar useNavigate
 
   // Función para manejar el cambio en los inputs
   const handleInputChange = (e) => {
@@ -21,35 +23,39 @@ const Login = () => {
   };
 
   // Función para manejar el submit del formulario
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Aquí puedes añadir una lógica de validación si es necesario
 
     // Enviar los datos al backend
     console.log("Datos enviados:", formData);
 
-    // Ejemplo usando fetch:
-    // fetch("/api/login", {
-    //   method: "POST",
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    //   body: JSON.stringify(formData),
-    // })
-    // .then(response => response.json())
-    // .then(data => {
-    //   if (data.error) {
-    //     setError("Credenciales incorrectas");
-    //   } else {
-    //     // Redirigir a otra vista o almacenar token
-    //     console.log("Login exitoso:", data);
-    //   }
-    // })
-    // .catch(error => {
-    //   console.error("Error:", error);
-    //   setError("Ocurrió un error. Inténtalo nuevamente.");
-    // });
+    try {
+      const response = await fetch("http://localhost:3000/api/users/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          nombre: formData.usuario, // Coincidir con el campo de tu base de datos
+          password: formData.contraseña,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Almacenar token en localStorage o redirigir al usuario
+        console.log("Login exitoso:", data);
+        localStorage.setItem('token', data.token); // Almacenar token en localStorage
+        // Redirigir al usuario a la vista 'paginainicial'
+        navigate("/paginainicial");
+      } else {
+        setError(data.message || "Credenciales incorrectas");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      setError("Ocurrió un error. Inténtalo nuevamente.");
+    }
   };
 
   return (

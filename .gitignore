@@ -7,10 +7,17 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Node modules
 node_modules
+
+# Build output directories
 dist
 dist-ssr
-*.local
+build
+
+# Environment files
+.env
+.env.local
 
 # Editor directories and files
 .vscode/*
@@ -22,3 +29,13 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Miscellaneous
+/lib-cov
+/coverage
+
+# OS generated files
+Thumbs.db
+
+# Production build
+/build

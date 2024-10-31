@@ -1,25 +1,36 @@
+// server.js
 const express = require('express');
 const cors = require('cors');
-const sequelize = require('./models/db'); // Asegúrate de que db.js exporte tu instancia de Sequelize
-const userRoutes = require('./routes/userRoutes'); // Ruta de usuario
+const sequelize = require('./config/db');
+const authRoutes = require('./routes/authRoutes');
+const postRoutes = require('./routes/postRoutes');
+const userRoutes = require('./routes/userRoutes');
+
+// Importar modelos para sincronizar las asociaciones
+const User = require('./models/userModel');
+const Post = require('./models/postModel');
+
+// Configurar las asociaciones entre los modelos
+User.hasMany(Post, { foreignKey: 'usuarioId', as: 'posts' });
+Post.belongsTo(User, { foreignKey: 'usuarioId', as: 'User' });
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
-// Middleware
+// Middlewares
 app.use(cors());
 app.use(express.json());
+
+// Rutas
+app.use('/api/auth', authRoutes);
+app.use('/api/posts', postRoutes);
 app.use('/api/users', userRoutes);
 
-// Iniciar servidor y conectar a la base de datos
-(async () => {
-  try {
-    await sequelize.authenticate();
-    console.log('Conexión a la base de datos exitosa');
-    app.listen(PORT, () => {
-      console.log(`Servidor corriendo en el puerto ${PORT}`);
-    });
-  } catch (error) {
-    console.error('Error al conectar a la base de datos:', error);
-  }
-})();
+// Sincroniza la base de datos y levanta el servidor
+sequelize.sync({ alter: true }).then(() => {
+  console.log('Conexión a la base de datos exitosa');
+  app.listen(3000, () => {
+    console.log('Servidor corriendo en el puerto 3000');
+  });
+}).catch((error) => {
+  console.error('Error al conectar con la base de datos:', error);
+});

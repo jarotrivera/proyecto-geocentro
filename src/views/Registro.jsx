@@ -12,6 +12,7 @@ const Registro = () => {
   });
 
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   useEffect(() => {
     document.body.classList.add("no-scroll");
@@ -26,7 +27,7 @@ const Registro = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (formData.contraseña !== formData.repetirContraseña) {
       setError("Las contraseñas no coinciden");
@@ -34,7 +35,33 @@ const Registro = () => {
     }
 
     setError("");
-    console.log("Datos enviados:", formData);
+    setSuccess("");
+
+    try {
+      const response = await fetch("http://localhost:3000/api/users/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          nombre: formData.usuario,
+          email: formData.email,
+          password: formData.contraseña,
+          departamento: formData.departamento,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setSuccess("Usuario registrado con éxito.");
+      } else {
+        setError(data.message || "Error al registrar usuario.");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      setError("Hubo un problema con el registro, intenta nuevamente.");
+    }
   };
 
   return (
@@ -100,7 +127,10 @@ const Registro = () => {
                 />
               </Form.Group>
               {error && <p style={{ color: "red" }}>{error}</p>}
-              <Button className="button-resize1" type="submit">Registro</Button>
+              {success && <p style={{ color: "green" }}>{success}</p>}
+              <Button className="button-resize1" type="submit">
+                Registro
+              </Button>
             </Form>
           </div>
         </div>

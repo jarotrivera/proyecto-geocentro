@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Sidebar from "../components/Menu";
 import RightPanel2 from "../components/RightPanel2";
 import "./VistaHacerUnPost.css";
@@ -7,42 +7,38 @@ const VistaHacerUnPost = () => {
   const [titulo, setTitulo] = useState('');
   const [foto, setFoto] = useState('');
   const [descripcion, setDescripcion] = useState('');
-  const [posts, setPosts] = useState([]);
-
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const response = await fetch('/api/posts');
-        const data = await response.json();
-        setPosts(data);
-      } catch (error) {
-        console.error("Error al cargar publicaciones:", error);
-      }
-    };
-
-    fetchPosts();
-  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const nuevoPost = { titulo, foto, descripcion };
-
     try {
-      const response = await fetch('/api/posts', {
+      const nuevoPost = {
+        titulo,
+        foto,
+        descripcion,
+      };
+
+      // Enviar los datos al backend
+      const response = await fetch('http://localhost:3000/api/posts', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify(nuevoPost),
       });
 
-      if (!response.ok) throw new Error('Error al agregar la publicación');
+      if (!response.ok) {
+        throw new Error('Error al crear la publicación');
+      }
 
-      const addedPost = await response.json();
-      setPosts([...posts, addedPost]);
+      const data = await response.json();
+      console.log('Publicación creada:', data);
+
+      // Limpiar los campos del formulario
       setTitulo('');
       setFoto('');
       setDescripcion('');
     } catch (error) {
-      console.error("Error al enviar la publicación:", error);
+      console.error('Error:', error);
     }
   };
 
@@ -96,21 +92,6 @@ const VistaHacerUnPost = () => {
                 <button type="submit">Agregar Publicación</button>
               </form>
             </div>
-          </div>
-          <div className="posts-list">
-            {posts.map((post, index) => (
-              <div key={index} className="post-item">
-                {post.foto && (
-                  <div className="post-item-photo">
-                    <img src={post.foto} alt={post.titulo} />
-                  </div>
-                )}
-                <div className="post-item-info">
-                  <h2>{post.titulo}</h2>
-                  <p>{post.descripcion}</p>
-                </div>
-              </div>
-            ))}
           </div>
         </section>
         <RightPanel2 />

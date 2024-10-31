@@ -118,6 +118,7 @@
   display: inline-block;
   max-width: 100%;
   font-size: 32px;
+  margin-bottom: 55px;
 }
 
 .geocentro-el-foro {
@@ -132,6 +133,7 @@
   display: flex;
   align-items: center;
   font-size: 20px;
+  bottom: 25px;
 }
 
 .login-form {
