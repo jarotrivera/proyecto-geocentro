@@ -1,75 +1,73 @@
-/* Contenedor principal de las publicaciones */
-.posts-container {
+.pagina-inicial-container {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 0; /* Elimina el padding para que quede más a la izquierda */
-  max-width: 100%; /* Usa el ancho completo de la pantalla */
-  margin: 0 auto; /* Centra el contenedor en el espacio disponible */
+  padding: 0;
+  max-width: 100%; /* Reduce el ancho total para permitir más espacio a la derecha */
+  margin: 0 auto;
   overflow-y: auto;
   max-height: calc(100vh - 100px);
-  padding-left: 0;
-  margin-left: -150px;
+  margin-left: 150px; /* Ajusta para mover el bloque hacia la derecha */
+  padding-right: 10px; /* Espacio adicional para el scroll */
 }
 
-/* Estilos de la tarjeta de la publicación */
-.post-card {
+/* Estilos de la tarjeta con dimensiones flexibles */
+.pagina-inicial-card {
+  margin: 20px 0; /* Espacio vertical entre las tarjetas */
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   padding: 10px;
-  margin: 12px 0;
-  max-width: 1150px;
-  transition: 0.3s;
-  position: relative;
-  margin-left: -20px; /* Ajusta este valor hasta que logres la posición deseada */
+  width: 90%; /* Ajusta este porcentaje para hacer la tarjeta más ancha */
+  max-width: 1200px; /* Amplía la tarjeta en píxeles específicos */
+  margin-right: 962px; /* Mueve las tarjetas ligeramente hacia la izquierda */
+  transition: box-shadow 0.3s ease;
 }
 
-
-.post-card:hover {
+.pagina-inicial-card:hover {
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
 
-
-/* Encabezado de la publicación */
-.post-header {
+/* Encabezado y detalles de la publicación */
+.pagina-inicial-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-/* Contenedor de avatar y nombre del usuario */
-.user-avatar-container {
+.pagina-inicial-avatar-container {
   display: flex;
   align-items: center;
 }
 
-.user-info {
+.pagina-inicial-user-info {
   margin-left: 10px;
 }
 
-/* Título de la publicación */
-.post-title {
+.pagina-inicial-title {
   font-size: 1.2em;
   margin: 0;
 }
 
-/* Fecha de la publicación */
-.post-date {
+.pagina-inicial-date {
   color: rgb(97, 96, 96);
   font-size: 0.9em;
 }
 
-/* Contenido de la publicación */
-.post-content {
+.pagina-inicial-content {
   margin-top: 10px;
 }
 
-/* Imagen de la publicación */
-.post-image img {
+.pagina-inicial-image img {
+  width: auto;
   max-width: 100%;
-  max-height: 300px;
+  max-height: 400px;
   object-fit: cover;
   border-radius: 8px;
   margin-top: 10px;
 }
+
+.pagina-inicial-user-info .MuiTypography-subtitle1 {
+  font-size: 1.30em; /* Ajusta el tamaño según lo que necesites */
+}
+

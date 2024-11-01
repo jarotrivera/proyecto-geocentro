@@ -2,26 +2,18 @@ const Post = require('../models/postModel');
 const User = require('../models/userModel');
 const sharp = require('sharp');
 
-// Obtener todas las publicaciones con paginación
+// Obtener todas las publicaciones
 const getPosts = async (req, res) => {
   try {
     console.log("Intentando obtener publicaciones...");
-    
-    const page = parseInt(req.query.page) || 1; // Página actual desde el query
-    const limit = 10; // Limita a 10 publicaciones por página
-    const offset = (page - 1) * limit;
-
-    const { count, rows: posts } = await Post.findAndCountAll({
-      limit,
-      offset,
+    const posts = await Post.findAll({
       include: {
         model: User,
-        as: 'usuario', // Cambiado a 'usuario' para coincidir con el alias en server.js
-        attributes: ['nombre'], // Incluye solo el nombre del usuario
+        as: 'usuario', 
+        attributes: ['nombre'], 
       },
     });
 
-    const totalPages = Math.ceil(count / limit);
     const postsWithUsernames = posts.map(post => ({
       id: post.id,
       titulo: post.titulo,
@@ -33,14 +25,43 @@ const getPosts = async (req, res) => {
     }));
 
     console.log("Publicaciones obtenidas:", postsWithUsernames);
-    res.status(200).json({
-      data: postsWithUsernames,
-      currentPage: page,
-      totalPages,
-    });
+    res.status(200).json(postsWithUsernames);
   } catch (error) {
     console.error("Error al obtener las publicaciones:", error);
     res.status(500).json({ message: "Error al obtener las publicaciones", error });
+  }
+};
+
+// Obtener las publicaciones del usuario autenticado
+const getUserPosts = async (req, res) => {
+  const usuarioId = req.userId;
+  console.log("getUserPosts llamado para usuario ID:", usuarioId);
+
+  try {
+    const posts = await Post.findAll({
+      where: { usuarioId },
+      include: {
+        model: User,
+        as: 'usuario',
+        attributes: ['nombre'],
+      },
+    });
+
+    const userPosts = posts.map(post => ({
+      id: post.id,
+      titulo: post.titulo,
+      foto: post.foto,
+      descripcion: post.descripcion,
+      createdAt: post.createdAt,
+      updatedAt: post.updatedAt,
+      usuarioNombre: post.usuario ? post.usuario.nombre : 'Usuario desconocido',
+    }));
+
+    console.log("Publicaciones del usuario obtenidas:", userPosts);
+    res.status(200).json(userPosts);
+  } catch (error) {
+    console.error("Error al obtener las publicaciones del usuario:", error);
+    res.status(500).json({ message: "Error al obtener las publicaciones del usuario", error });
   }
 };
 
@@ -52,20 +73,18 @@ const createPost = async (req, res) => {
   try {
     let resizedImageBase64 = foto;
 
-    // Redimensiona la imagen solo si 'foto' tiene contenido
     if (foto) {
-      const buffer = Buffer.from(foto.split(",")[1], 'base64'); // Si foto está en formato base64
+      const buffer = Buffer.from(foto.split(",")[1], 'base64'); 
       const resizedImage = await sharp(buffer)
-        .resize({ width: 800 }) // Ajusta el tamaño deseado
-        .jpeg({ quality: 80 })  // Ajusta la calidad de la imagen
+        .resize({ width: 800 }) 
+        .jpeg({ quality: 80 }) 
         .toBuffer();
       resizedImageBase64 = `data:image/jpeg;base64,${resizedImage.toString('base64')}`;
     }
 
-    // Crear la publicación en la base de datos
     const newPost = await Post.create({
       titulo,
-      foto: resizedImageBase64, // Guardar la imagen redimensionada en la base de datos
+      foto: resizedImageBase64,
       descripcion,
       usuarioId,
     });
@@ -120,4 +139,4 @@ const deletePost = async (req, res) => {
   }
 };
 
-module.exports = { createPost, getPosts, editPost, deletePost };
+module.exports = { createPost, getPosts, getUserPosts, editPost, deletePost };

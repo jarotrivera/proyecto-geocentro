@@ -148,21 +148,21 @@ const PaginaInicial = () => {
       <div className="content4">
         <Sidebar />
         <section className="main-content" style={{ display: 'flex', justifyContent: 'space-between', padding: '20px' }}>
-          <div className="posts-container" style={{ flex: 1, marginRight: '20px' }}>
+          <div className="pagina-inicial-container">
             <div className="posts">
               {error ? (
                 <p>{error}</p>
               ) : publicaciones.length > 0 ? (
                 publicaciones.map((publicacion) => (
-                  <Card key={publicacion.id} className="post-card" variant="outlined" style={{ margin: '20px 0', width: '100%' }}>
+                  <Card key={publicacion.id} className="pagina-inicial-card" variant="outlined">
                     <CardContent>
-                      <Box display="flex" alignItems="center" mb={2}>
+                      <Box display="flex" alignItems="center" mb={2} className="pagina-inicial-header">
                         <Avatar src={publicacion.avatarUrl || "/perfiluser.png"} alt="Avatar" />
-                        <Box ml={2}>
+                        <Box ml={2} className="pagina-inicial-user-info">
                           <Typography variant="subtitle1" color="textSecondary">
                             {publicacion.usuarioNombre || 'Usuario'}
                           </Typography>
-                          <Typography variant="body2" color="textSecondary">
+                          <Typography variant="body2" color="textSecondary" className="pagina-inicial-date">
                             {new Date(publicacion.createdAt).toLocaleDateString()}
                           </Typography>
                         </Box>
@@ -176,15 +176,15 @@ const PaginaInicial = () => {
                           <MoreVertIcon />
                         </IconButton>
                       </Box>
-                      <Typography variant="h6" component="h2" style={{ fontWeight: 'bold', marginBottom: '10px' }}>
+                      <Typography variant="h6" component="h2" className="pagina-inicial-title">
                         {publicacion.titulo}
                       </Typography>
-                      <Typography variant="body1" component="p" style={{ marginTop: '10px' }}>
+                      <Typography variant="body1" component="p" className="pagina-inicial-content">
                         {publicacion.descripcion}
                       </Typography>
                       {publicacion.foto && (
-                        <div className="post-image" style={{ marginTop: '10px' }}>
-                          <img src={publicacion.foto} alt="Imagen de la publicación" style={{ width: '100%', maxHeight: '200px', objectFit: 'cover' }} />
+                        <div className="pagina-inicial-image">
+                          <img src={publicacion.foto} alt="Imagen de la publicación" />
                           <Button onClick={() => openImageModal(publicacion.foto)} color="primary" style={{ marginTop: '10px' }}>
                             Ver Imagen Completa
                           </Button>
@@ -211,7 +211,7 @@ const PaginaInicial = () => {
         </section>
       </div>
 
-      {/* Modal de Imagen Completa */}
+      {/* Modal para ver la imagen completa */}
       <Modal open={imageModalOpen} onClose={closeImageModal}>
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', position: 'relative' }}>
           <IconButton onClick={closeImageModal} sx={{ position: 'absolute', top: '10px', right: '10px' }}>
@@ -221,7 +221,6 @@ const PaginaInicial = () => {
         </Box>
       </Modal>
 
-      {/* Modal de Edición */}
       <Dialog open={editModalOpen} onClose={closeEditModal}>
         <DialogTitle>Editar Publicación</DialogTitle>
         <DialogContent>
